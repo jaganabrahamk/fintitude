@@ -5,78 +5,169 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fintitude – Financial Education Coming Soon</title>
 
+<!-- Apple-grade fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<!-- Lottie Animation Library -->
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
 <style>
     body {
         margin: 0;
-        font-family: 'Segoe UI', sans-serif;
+        font-family: 'Inter', sans-serif;
         background: linear-gradient(135deg, #e8f0ff, #ffffff);
-        color: #003366;
+        color: #002244;
         overflow-x: hidden;
     }
 
+    /* Fluid Hero Background Animation */
+    .hero-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: radial-gradient(circle at top left, #dce8ff, #ffffff);
+        overflow: hidden;
+        z-index: -1;
+        animation: bgMove 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgMove {
+        0% { background-position: top left; }
+        100% { background-position: bottom right; }
+    }
+
+    /* Floating Waves */
+    .wave {
+        position: absolute;
+        width: 200%;
+        height: 200px;
+        background: rgba(0, 85, 204, 0.08);
+        border-radius: 50%;
+        animation: waveFloat 10s ease-in-out infinite;
+    }
+
+    @keyframes waveFloat {
+        0% { transform: translateX(-20%) translateY(0); }
+        50% { transform: translateX(0) translateY(20px); }
+        100% { transform: translateX(-20%) translateY(0); }
+    }
+
+    .wave1 { top: 20%; left: -50%; }
+    .wave2 { top: 50%; left: -30%; animation-delay: 2s; }
+    .wave3 { top: 70%; left: -40%; animation-delay: 4s; }
+
+    /* Container */
     .container {
         text-align: center;
-        padding: 100px 20px;
+        padding: 140px 20px 80px;
         animation: fadeIn 1.5s ease-in-out;
     }
 
     h1 {
-        font-size: 52px;
+        font-size: 64px;
         margin-bottom: 10px;
         font-weight: 700;
+        letter-spacing: -1px;
         animation: slideUp 1.2s ease;
     }
 
     p {
-        font-size: 20px;
+        font-size: 22px;
         max-width: 700px;
         margin: 0 auto 30px;
         animation: slideUp 1.6s ease;
         line-height: 1.6;
     }
 
-    .hero-image {
-        width: 260px;
-        margin: 30px auto;
+    /* Lottie Savings Jar */
+    .lottie-jar {
+        width: 280px;
+        margin: 40px auto;
         animation: float 4s ease-in-out infinite;
     }
 
-    .section {
-        max-width: 800px;
-        margin: 60px auto;
-        text-align: left;
-        font-size: 18px;
-        line-height: 1.7;
-        animation: fadeIn 2s ease;
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+        100% { transform: translateY(0px); }
     }
 
-    .section h2 {
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 28px;
-    }
-
-    .section h3 {
-        margin-top: 40px;
+    /* Bell Button */
+    .bell-btn {
+        background: linear-gradient(135deg, #0055cc, #003399);
+        color: white;
+        padding: 18px 36px;
+        border-radius: 50px;
         font-size: 22px;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        margin-top: 20px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0px 6px 18px rgba(0,0,0,0.15);
     }
 
-    ul {
-        margin-top: 10px;
-        padding-left: 20px;
+    .bell-btn:hover {
+        transform: scale(1.06);
+        box-shadow: 0px 10px 24px rgba(0,0,0,0.22);
     }
 
-    li {
-        margin-bottom: 12px;
+    .bell-icon {
+        width: 32px;
     }
 
+    .counter {
+        margin-top: 12px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #003366;
+    }
+
+    /* Stats Section */
+    .stats {
+        max-width: 900px;
+        margin: 80px auto;
+        font-size: 20px;
+        line-height: 1.7;
+    }
+
+    .stat-box {
+        background: #ffffff;
+        padding: 28px;
+        border-radius: 16px;
+        margin-bottom: 24px;
+        box-shadow: 0px 6px 18px rgba(0,0,0,0.08);
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.8s ease;
+    }
+
+    .stat-box.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .stat-number {
+        font-size: 40px;
+        font-weight: 700;
+        color: #0055cc;
+        margin-bottom: 10px;
+    }
+
+    /* Footer */
     .footer {
-        margin-top: 60px;
-        font-size: 14px;
+        margin-top: 80px;
+        font-size: 16px;
         opacity: 0.7;
-        animation: fadeIn 2.5s ease;
+        text-align: center;
+        padding-bottom: 40px;
     }
 
+    /* Animations */
     @keyframes fadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
@@ -86,64 +177,72 @@
         from { transform: translateY(40px); opacity: 0; }
         to { transform: translateY(0); opacity: 1; }
     }
-
-    @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-15px); }
-        100% { transform: translateY(0px); }
-    }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<!-- Hero Background Animation -->
+<div class="hero-bg"></div>
+<div class="wave wave1"></div>
+<div class="wave wave2"></div>
+<div class="wave wave3"></div>
 
-    <!-- Financial Literacy Graphic -->
-    <img class="hero-image" src="https://cdn-icons-png.flaticon.com/512/857/857681.png" alt="Financial Literacy Icon">
+<div class="container">
 
     <h1>Fintitude</h1>
 
     <p>
         Empowering Canadians with <strong>clarity</strong>, <strong>confidence</strong>, and <strong>financial literacy</strong>.<br>
-        Our full financial education platform is launching soon.
+        A new era of financial education is coming.
     </p>
 
-    <p style="font-size: 18px; margin-top: 20px;">
-        Stay tuned for tools, guides, courses, and insights designed to help you build a stronger financial future.
-    </p>
+    <!-- Lottie Savings Jar Animation -->
+    <lottie-player 
+        class="lottie-jar"
+        src="https://assets9.lottiefiles.com/packages/lf20_tutvdkgq.json"
+        background="transparent"
+        speed="1"
+        loop
+        autoplay>
+    </lottie-player>
+
+    <!-- Bell Button -->
+    <button class="bell-btn" onclick="ringBell()">
+        <img class="bell-icon" src="https://cdn-icons-png.flaticon.com/512/1827/1827504.png" alt="Bell">
+        I'm Excited & I Want It
+    </button>
+
+    <div class="counter" id="bellCounter">Bell rung: 0 times</div>
 
 </div>
 
-<!-- Financial Literacy Section -->
-<div class="section">
+<!-- Stats Section -->
+<div class="stats">
 
-    <h2>Why Financial Literacy Matters</h2>
+    <div class="stat-box">
+        <div class="stat-number" data-target="1.74">0</div>
+        Canadians owe <strong>$1.74</strong> for every $1 of disposable income.
+    </div>
 
-    <p>
-        Financial literacy is the blend of <strong>awareness</strong>, <strong>knowledge</strong>, <strong>skills</strong>, 
-        <strong>attitudes</strong>, and <strong>behaviours</strong> needed to make sound financial decisions and achieve 
-        long-term financial well-being. It’s about confidently meeting today’s financial needs while staying resilient 
-        for the future.
-        <br><span style="font-size:14px; opacity:0.7;">Sources: CFPB (2015), Muir et al. (2017), FCAC (2019)</span>
-    </p>
+    <div class="stat-box">
+        <div class="stat-number" data-target="25">0</div>
+        <strong>1 in 4</strong> adults cannot cover a $400 emergency.
+    </div>
 
-    <h3>📊 The Reality Today</h3>
+    <div class="stat-box">
+        <div class="stat-number" data-target="40">0</div>
+        <strong>40%</strong> feel anxious about managing money.
+    </div>
 
-    <ul>
-        <li><strong>Debt:</strong> Canadians carry approximately <strong>$1.74 in household debt</strong> for every dollar of disposable income.</li>
-        <li><strong>Emergency Funds:</strong> About <strong>1 in 4 North American adults</strong> cannot cover a $400 unexpected expense.</li>
-        <li><strong>Lack of Confidence:</strong> Nearly <strong>40% of adults</strong> feel anxious or overwhelmed when managing their finances.</li>
-    </ul>
+    <h3 style="text-align:center; margin-top:40px;">We’re Here to Make a Difference</h3>
 
-    <h3 style="text-align:center;">We’re Here to Make a Difference</h3>
-
-    <p style="text-align:center; font-size:22px; margin-top:10px;">
+    <p style="text-align:center; font-size:24px; margin-top:10px;">
         Change your <strong>attitude</strong> towards your finances.<br>
         Stay tuned for <strong>Fintitude</strong>.
     </p>
 
-    <p style="text-align:center; font-size:16px; opacity:0.8; margin-top:20px;">
+    <p style="text-align:center; font-size:18px; opacity:0.8; margin-top:20px;">
         Powered by <strong>Libereon Financial Inc.</strong>
     </p>
 
@@ -153,6 +252,41 @@
     © 2026 Fintitude — Financial Education for Everyone
 </div>
 
+<script>
+    /* Bell Counter */
+    let count = 0;
+    function ringBell() {
+        count++;
+        document.getElementById("bellCounter").innerText = "Bell rung: " + count + " times";
+    }
+
+    /* Animated Stats */
+    const statBoxes = document.querySelectorAll('.stat-box');
+    const statNumbers = document.querySelectorAll('.stat-number');
+
+    function animateStats() {
+        statBoxes.forEach((box, index) => {
+            const rect = box.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 50) {
+                box.classList.add('visible');
+                const target = statNumbers[index].getAttribute('data-target');
+                let current = 0;
+                const increment = target / 100;
+
+                const counter = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(counter);
+                    }
+                    statNumbers[index].innerText = current.toFixed(0);
+                }, 20);
+            }
+        });
+    }
+
+    window.addEventListener('scroll', animateStats);
+</script>
+
 </body>
 </html>
-
