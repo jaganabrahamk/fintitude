@@ -1,292 +1,1305 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fintitude – Financial Education Coming Soon</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fintitude — Financial Education for Everyone</title>
 
-<!-- Apple-grade fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-<!-- Lottie Animation Library -->
-<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <style>
+    /* ─── Reset & Tokens ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<style>
-    body {
-        margin: 0;
-        font-family: 'Inter', sans-serif;
-        background: linear-gradient(135deg, #e8f0ff, #ffffff);
-        color: #002244;
-        overflow-x: hidden;
+    :root {
+      /* Brand palette */
+      --blue-950:  #04082E;
+      --blue-900:  #07104A;
+      --blue-800:  #0D1E6E;
+      --blue-700:  #1A3494;
+      --blue-500:  #2653CC;
+      --blue-300:  #6B93F5;
+      --blue-100:  #D6E2FD;
+
+      --green-600: #0B7A45;
+      --green-500: #12A85E;
+      --green-400: #22D07A;
+      --green-300: #5FE8A4;
+      --green-100: #D0F7E6;
+
+      --white:     #FFFFFF;
+      --white-70:  rgba(255,255,255,0.70);
+      --white-40:  rgba(255,255,255,0.40);
+      --white-12:  rgba(255,255,255,0.12);
+      --white-06:  rgba(255,255,255,0.06);
+
+      --surface:   #F4F6FF;
+      --card-bg:   rgba(255,255,255,0.80);
+
+      --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
+      --ease-smooth: cubic-bezier(0.4,0,0.2,1);
+
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
     }
 
-    /* Fluid Hero Background Animation */
-    .hero-bg {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        background: radial-gradient(circle at top left, #dce8ff, #ffffff);
-        overflow: hidden;
-        z-index: -1;
-        animation: bgMove 12s ease-in-out infinite alternate;
+    html, body { width: 100%; overflow-x: hidden; background: var(--blue-950); }
+
+    /* ─── HERO ────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 80px 24px 110px;
     }
 
-    @keyframes bgMove {
-        0% { background-position: top left; }
-        100% { background-position: bottom right; }
+    /* Canvas for gradient orbs */
+    #gradient-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
     }
 
-    /* Floating Waves */
-    .wave {
-        position: absolute;
-        width: 200%;
-        height: 200px;
-        background: rgba(0, 85, 204, 0.08);
-        border-radius: 50%;
-        animation: waveFloat 10s ease-in-out infinite;
+    /* Grain texture overlay */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.04;
+      z-index: 2;
+      pointer-events: none;
     }
 
-    @keyframes waveFloat {
-        0% { transform: translateX(-20%) translateY(0); }
-        50% { transform: translateX(0) translateY(20px); }
-        100% { transform: translateX(-20%) translateY(0); }
+    /* SVG wave layer */
+    .wave-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+      pointer-events: none;
     }
 
-    .wave1 { top: 20%; left: -50%; }
-    .wave2 { top: 50%; left: -30%; animation-delay: 2s; }
-    .wave3 { top: 70%; left: -40%; animation-delay: 4s; }
-
-    /* Container */
-    .container {
-        text-align: center;
-        padding: 140px 20px 80px;
-        animation: fadeIn 1.5s ease-in-out;
+    /* ── Hero content ── */
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
     }
 
-    h1 {
-        font-size: 64px;
-        margin-bottom: 10px;
-        font-weight: 700;
-        letter-spacing: -1px;
-        animation: slideUp 1.2s ease;
+    /* ── Brand ── */
+    .brand-name {
+      font-family: 'Urbanist', sans-serif;
+      font-weight: 900;
+      font-size: clamp(60px, 10vw, 126px);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 28px;
+      background: linear-gradient(135deg, #FFFFFF 30%, #5FE8A4 55%, #6B93F5 75%, #FFFFFF 90%);
+      background-size: 250% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: brandShimmer 7s linear infinite;
     }
 
-    p {
-        font-size: 22px;
-        max-width: 700px;
-        margin: 0 auto 30px;
-        animation: slideUp 1.6s ease;
-        line-height: 1.6;
+    @keyframes brandShimmer {
+      0%   { background-position: 250% center; }
+      100% { background-position: -250% center; }
     }
 
-    /* Lottie Savings Jar */
-    .lottie-jar {
-        width: 280px;
-        margin: 40px auto;
-        animation: float 4s ease-in-out infinite;
+    /* ── Jar wrapper ── */
+    .jar-wrap {
+      width: clamp(160px, 22vw, 230px);
+      height: clamp(200px, 28vw, 290px);
+      margin-bottom: 40px;
+      position: relative;
+      animation: jarFloat 5.5s ease-in-out infinite;
+      filter: drop-shadow(0 28px 56px rgba(18,168,94,0.22)) drop-shadow(0 8px 24px rgba(38,83,204,0.30));
     }
 
-    @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-15px); }
-        100% { transform: translateY(0px); }
+    @keyframes jarFloat {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-13px); }
     }
 
-    /* Bell Button */
-    .bell-btn {
-        background: linear-gradient(135deg, #0055cc, #003399);
-        color: white;
-        padding: 18px 36px;
-        border-radius: 50px;
-        font-size: 22px;
-        border: none;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 14px;
-        margin-top: 20px;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        box-shadow: 0px 6px 18px rgba(0,0,0,0.15);
+    /* ── Tagline ── */
+    .hero-tagline {
+      font-size: clamp(15px, 2.2vw, 21px);
+      font-weight: 400;
+      line-height: 1.58;
+      color: var(--white-70);
+      letter-spacing: -0.01em;
+      max-width: 540px;
+      margin-bottom: 48px;
     }
 
-    .bell-btn:hover {
-        transform: scale(1.06);
-        box-shadow: 0px 10px 24px rgba(0,0,0,0.22);
+    .hero-tagline strong {
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    /* ── CTA ── */
+    .cta-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 17px 38px;
+      background: linear-gradient(135deg, #22D07A 0%, #0B9E5A 50%, #0B7A45 100%);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      box-shadow:
+        0 2px 0 rgba(255,255,255,0.18) inset,
+        0 8px 32px rgba(18,168,94,0.42),
+        0 2px 8px rgba(0,0,0,0.22);
+      transition:
+        transform 0.22s var(--ease-spring),
+        box-shadow 0.22s var(--ease-smooth);
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .cta-btn:hover {
+      transform: scale(1.048) translateY(-2px);
+      box-shadow:
+        0 2px 0 rgba(255,255,255,0.22) inset,
+        0 18px 52px rgba(18,168,94,0.52),
+        0 4px 16px rgba(0,0,0,0.24);
+    }
+
+    .cta-btn:active {
+      transform: scale(0.97);
+      box-shadow:
+        0 1px 0 rgba(255,255,255,0.14) inset,
+        0 4px 16px rgba(18,168,94,0.28),
+        0 1px 4px rgba(0,0,0,0.16);
     }
 
     .bell-icon {
-        width: 32px;
+      font-size: 18px;
+      display: inline-block;
+      transition: transform 0.18s var(--ease-spring);
     }
 
-    .counter {
-        margin-top: 12px;
-        font-size: 18px;
-        font-weight: 600;
-        color: #003366;
+    .cta-btn:hover .bell-icon { transform: rotate(-14deg) scale(1.18); }
+    .cta-btn:active .bell-icon { animation: ringBell 0.42s var(--ease-spring); }
+
+    @keyframes ringBell {
+      0%   { transform: rotate(0); }
+      20%  { transform: rotate(-20deg); }
+      45%  { transform: rotate(15deg); }
+      65%  { transform: rotate(-10deg); }
+      82%  { transform: rotate(6deg); }
+      100% { transform: rotate(0); }
     }
 
-    /* Stats Section */
-    .stats {
-        max-width: 900px;
-        margin: 80px auto;
-        font-size: 20px;
-        line-height: 1.7;
+    .bell-counter {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--white-40);
+      letter-spacing: 0.01em;
     }
 
-    .stat-box {
-        background: #ffffff;
-        padding: 28px;
-        border-radius: 16px;
-        margin-bottom: 24px;
-        box-shadow: 0px 6px 18px rgba(0,0,0,0.08);
-        opacity: 0;
-        transform: translateY(40px);
-        transition: all 0.8s ease;
+    .bell-counter span {
+      color: var(--green-300);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      display: inline-block;
     }
 
-    .stat-box.visible {
-        opacity: 1;
-        transform: translateY(0);
+    .bell-counter span.bump { animation: countBump 0.32s var(--ease-spring); }
+
+    @keyframes countBump {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.45); }
+      100% { transform: scale(1); }
     }
+
+    /* ── Scroll hint ── */
+    .scroll-hint {
+      position: absolute;
+      bottom: 34px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.40;
+      animation: scrollBob 2.6s ease-in-out infinite;
+    }
+
+    @keyframes scrollBob {
+      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.40; }
+      50%       { transform: translateX(-50%) translateY(7px); opacity: 0.62; }
+    }
+
+    .scroll-hint span {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--white-70);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    /* ─── STATS SECTION ───────────────────────────────────────── */
+    .stats-section {
+      background: var(--surface);
+      padding: clamp(72px, 9vw, 120px) 24px;
+    }
+
+    .section-label {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--green-600);
+      margin-bottom: 14px;
+    }
+
+    .section-heading {
+      text-align: center;
+      font-size: clamp(26px, 4.5vw, 46px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.12;
+      color: var(--blue-900);
+      max-width: 580px;
+      margin: 0 auto 64px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(38,83,204,0.08);
+      border-radius: 24px;
+      padding: 40px 34px;
+      box-shadow:
+        0 1px 2px rgba(0,0,0,0.03),
+        0 4px 24px rgba(38,83,204,0.07),
+        0 0 0 0.5px rgba(255,255,255,0.9) inset;
+      opacity: 0;
+      transform: translateY(40px);
+      transition:
+        opacity 0.65s var(--ease-smooth),
+        transform 0.65s var(--ease-smooth),
+        box-shadow 0.25s var(--ease-smooth);
+      backdrop-filter: blur(8px);
+    }
+
+    .stat-card:nth-child(2) { transition-delay: 0.13s; }
+    .stat-card:nth-child(3) { transition-delay: 0.26s; }
+
+    .stat-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .stat-card.visible:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 1px 2px rgba(0,0,0,0.04),
+        0 10px 44px rgba(38,83,204,0.14),
+        0 0 0 0.5px rgba(255,255,255,0.9) inset;
+    }
+
+    .stat-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 21px;
+      margin-bottom: 22px;
+    }
+
+    .stat-card:nth-child(1) .stat-icon { background: linear-gradient(135deg, #D0F7E6, #9EF2CA); box-shadow: 0 2px 10px rgba(18,168,94,0.22); }
+    .stat-card:nth-child(2) .stat-icon { background: linear-gradient(135deg, #D6E2FD, #A8C1FC); box-shadow: 0 2px 10px rgba(38,83,204,0.20); }
+    .stat-card:nth-child(3) .stat-icon { background: linear-gradient(135deg, #D0F7E6, #9EF2CA); box-shadow: 0 2px 10px rgba(18,168,94,0.22); }
 
     .stat-number {
-        font-size: 40px;
-        font-weight: 700;
-        color: #0055cc;
-        margin-bottom: 10px;
+      font-size: clamp(38px, 5.5vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--blue-900);
+      margin-bottom: 12px;
+      font-variant-numeric: tabular-nums;
     }
 
-    /* Footer */
-    .footer {
-        margin-top: 80px;
-        font-size: 16px;
-        opacity: 0.7;
-        text-align: center;
-        padding-bottom: 40px;
+    .stat-number .unit {
+      font-size: 0.5em;
+      font-weight: 600;
+      color: var(--green-600);
+      vertical-align: super;
+      letter-spacing: 0;
     }
 
-    /* Animations */
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+    .stat-label {
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: rgba(7,16,74,0.60);
+      letter-spacing: -0.005em;
     }
 
-    @keyframes slideUp {
-        from { transform: translateY(40px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
+    .stat-label strong {
+      color: var(--blue-800);
+      font-weight: 600;
     }
-</style>
+
+    /* ─── CLOSING ─────────────────────────────────────────────── */
+    .closing-section {
+      background: var(--blue-900);
+      padding: clamp(80px, 11vw, 140px) 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .closing-section::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px; height: 400px;
+      background: radial-gradient(ellipse, rgba(18,168,94,0.14) 0%, rgba(38,83,204,0.10) 50%, transparent 75%);
+      pointer-events: none;
+    }
+
+    .closing-content {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .closing-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--green-400);
+      margin-bottom: 20px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.55s var(--ease-smooth), transform 0.55s var(--ease-smooth);
+    }
+
+    .closing-headline {
+      font-size: clamp(30px, 5.5vw, 54px);
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      line-height: 1.08;
+      color: var(--white);
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s 0.10s var(--ease-smooth), transform 0.6s 0.10s var(--ease-smooth);
+    }
+
+    .closing-sub {
+      font-size: clamp(15px, 2vw, 18px);
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--white-70);
+      margin-bottom: 40px;
+      letter-spacing: -0.01em;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s 0.20s var(--ease-smooth), transform 0.6s 0.20s var(--ease-smooth);
+    }
+
+    .powered-by {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--white-40);
+      border: 1px solid var(--white-12);
+      border-radius: 100px;
+      padding: 9px 20px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s 0.30s var(--ease-smooth), transform 0.6s 0.30s var(--ease-smooth);
+    }
+
+    .powered-by::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--green-400);
+      flex-shrink: 0;
+    }
+
+    .closing-section.visible .closing-eyebrow,
+    .closing-section.visible .closing-headline,
+    .closing-section.visible .closing-sub,
+    .closing-section.visible .powered-by {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── FOOTER ──────────────────────────────────────────────── */
+    footer {
+      background: var(--blue-950);
+      border-top: 1px solid var(--white-06);
+      padding: 28px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .footer-text {
+      font-size: 12.5px;
+      font-weight: 400;
+      color: var(--white-40);
+      letter-spacing: 0.01em;
+      text-align: center;
+    }
+
+    .footer-text span {
+      color: var(--white-70);
+      font-weight: 500;
+    }
+
+    /* ─── REDUCED MOTION ──────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .stats-grid  { grid-template-columns: 1fr; }
+      .stat-card   { padding: 32px 26px; }
+      .cta-btn     { padding: 15px 28px; font-size: 14px; }
+      .jar-wrap    { width: 150px; height: 190px; }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       JAR SVG ANIMATIONS
+    ═══════════════════════════════════════════════════════════ */
+
+    /* Total cycle = 12s: coins fall every 1.5s, fill rises over 10.5s, then resets */
+    .coin-faller {
+      animation: coinFall 12s ease-in infinite;
+      opacity: 0;
+    }
+    .coin-faller:nth-child(1)  { animation-delay: 0.2s; }
+    .coin-faller:nth-child(2)  { animation-delay: 1.7s; }
+    .coin-faller:nth-child(3)  { animation-delay: 3.2s; }
+    .coin-faller:nth-child(4)  { animation-delay: 4.7s; }
+    .coin-faller:nth-child(5)  { animation-delay: 6.2s; }
+    .coin-faller:nth-child(6)  { animation-delay: 7.7s; }
+    .coin-faller:nth-child(7)  { animation-delay: 9.2s; }
+
+    @keyframes coinFall {
+      0%    { transform: translateY(-90px) rotate(-8deg);  opacity: 0; }
+      4%    { opacity: 1; }
+      11%   { transform: translateY(4px)   rotate(4deg);  opacity: 1; }
+      14%   { transform: translateY(0px)   rotate(0deg);  opacity: 0; }
+      100%  { transform: translateY(0px);                 opacity: 0; }
+    }
+
+    /* Coin bounce on landing */
+    .coin-faller:nth-child(odd)  { animation-timing-function: cubic-bezier(0.22,1,0.36,1); }
+    .coin-faller:nth-child(even) { animation-timing-function: cubic-bezier(0.34,1.4,0.64,1); }
+
+    /* Coin pile inside jar — each row fades in and stays */
+    .pile-row {
+      opacity: 0;
+      animation: pileAppear 12s forwards infinite;
+    }
+    .pile-row:nth-child(1)  { animation-delay: 0.9s; }
+    .pile-row:nth-child(2)  { animation-delay: 2.4s; }
+    .pile-row:nth-child(3)  { animation-delay: 3.9s; }
+    .pile-row:nth-child(4)  { animation-delay: 5.4s; }
+    .pile-row:nth-child(5)  { animation-delay: 6.9s; }
+    .pile-row:nth-child(6)  { animation-delay: 8.4s; }
+    .pile-row:nth-child(7)  { animation-delay: 9.9s; }
+
+    @keyframes pileAppear {
+      0%    { opacity: 0; transform: translateY(5px); }
+      5%    { opacity: 1; transform: translateY(0); }
+      88%   { opacity: 1; transform: translateY(0); }
+      93%   { opacity: 0; }
+      100%  { opacity: 0; }
+    }
+
+    /* Coin shine pulse */
+    .coin-shine {
+      animation: coinShine 2.2s ease-in-out infinite;
+    }
+    @keyframes coinShine {
+      0%,100% { opacity: 0.25; }
+      50%     { opacity: 0.65; }
+    }
+
+    /* Glass wall shimmer */
+    .glass-shine {
+      animation: glassShimmer 5s ease-in-out infinite;
+    }
+    @keyframes glassShimmer {
+      0%,100% { opacity: 0.20; }
+      50%     { opacity: 0.45; }
+    }
+
+    /* Liquid fill — scaleY from bottom */
+    .liquid-fill {
+      transform-origin: bottom center;
+      animation: liquidRise 12s ease-in-out infinite;
+    }
+    @keyframes liquidRise {
+      0%   { transform: scaleY(0.01); opacity: 0.7; }
+      5%   { opacity: 0.9; }
+      87%  { transform: scaleY(1); opacity: 0.92; }
+      92%  { transform: scaleY(1); opacity: 0.85; }
+      97%  { transform: scaleY(0.01); opacity: 0.3; }
+      100% { transform: scaleY(0.01); opacity: 0.7; }
+    }
+
+    /* Meniscus wave */
+    .meniscus {
+      transform-origin: bottom center;
+      animation: liquidRise 12s ease-in-out infinite, meniscusWave 1.8s ease-in-out infinite;
+    }
+    @keyframes meniscusWave {
+      0%,100% { d: path("M42,90 Q70,86 100,90 Q130,94 158,90 L158,97 Q130,101 100,97 Q70,93 42,97 Z"); }
+      50%     { d: path("M42,90 Q70,94 100,90 Q130,86 158,90 L158,97 Q130,93 100,97 Q70,101 42,97 Z"); }
+    }
+
+    /* Jar float */
+    .jar-wrap {
+      width: clamp(180px, 24vw, 260px);
+      height: clamp(230px, 30vw, 330px);
+      margin-bottom: 36px;
+      position: relative;
+      animation: jarFloat 5.5s ease-in-out infinite;
+      filter:
+        drop-shadow(0 32px 60px rgba(18,168,94,0.20))
+        drop-shadow(0 8px 24px rgba(38,83,204,0.28));
+    }
+    @keyframes jarFloat {
+      0%,100% { transform: translateY(0); }
+      50%     { transform: translateY(-13px); }
+    }
+
+  </style>
 </head>
-
 <body>
 
-<!-- Hero Background Animation -->
-<div class="hero-bg"></div>
-<div class="wave wave1"></div>
-<div class="wave wave2"></div>
-<div class="wave wave3"></div>
+  <!-- ══════════════════════════════════════════════════
+       HERO
+  ══════════════════════════════════════════════════ -->
+  <section class="hero" aria-label="Hero">
 
-<div class="container">
+    <canvas id="gradient-canvas" aria-hidden="true"></canvas>
 
-    <h1>Fintitude</h1>
+    <svg class="wave-layer" aria-hidden="true" preserveAspectRatio="none"
+         viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="wg1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#12A85E" stop-opacity="0.10"/>
+          <stop offset="100%" stop-color="#2653CC" stop-opacity="0.05"/>
+        </linearGradient>
+        <linearGradient id="wg2" x1="100%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#2653CC" stop-opacity="0.08"/>
+          <stop offset="100%" stop-color="#12A85E" stop-opacity="0.04"/>
+        </linearGradient>
+      </defs>
+      <path class="wave w1"
+            d="M0,500 C240,420 480,600 720,500 C960,400 1200,580 1440,500 L1440,900 L0,900 Z"
+            fill="url(#wg1)"/>
+      <path class="wave w2"
+            d="M0,640 C320,560 640,710 960,620 C1200,550 1380,670 1440,640 L1440,900 L0,900 Z"
+            fill="url(#wg2)"/>
+    </svg>
 
-    <p>
-        Empowering Canadians with <strong>clarity</strong>, <strong>confidence</strong>, and <strong>financial literacy</strong>.<br>
-        A new era of financial education is coming.
-    </p>
+    <div class="hero-content">
 
-    <!-- Lottie Savings Jar Animation -->
-    <lottie-player 
-        class="lottie-jar"
-        src="https://assets9.lottiefiles.com/packages/lf20_tutvdkgq.json"
-        background="transparent"
-        speed="1"
-        loop
-        autoplay>
-    </lottie-player>
+      <!-- ═══════════════════════════════════════
+           REALISTIC GLASS JAR SVG
+      ═══════════════════════════════════════ -->
+      <div class="jar-wrap" role="img" aria-label="Glass savings jar filling with gold and silver coins">
+        <svg id="jar-svg" viewBox="0 0 220 290" xmlns="http://www.w3.org/2000/svg"
+             width="100%" height="100%" overflow="visible">
+          <defs>
 
-    <!-- Bell Button -->
-    <button class="bell-btn" onclick="ringBell()">
-        <img class="bell-icon" src="https://cdn-icons-png.flaticon.com/512/1827/1827504.png" alt="Bell">
-        I'm Excited & I Want It
-    </button>
+            <!-- ── GLASS gradients ── -->
+            <!-- Outer glass wall: thick curved glass left-to-right -->
+            <linearGradient id="gWallL" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   stop-color="#c8ddf5" stop-opacity="0.90"/>
+              <stop offset="6%"   stop-color="#e8f3ff" stop-opacity="0.98"/>
+              <stop offset="14%"  stop-color="#f5faff" stop-opacity="0.55"/>
+              <stop offset="48%"  stop-color="#eaf4ff" stop-opacity="0.18"/>
+              <stop offset="80%"  stop-color="#d4eaff" stop-opacity="0.62"/>
+              <stop offset="92%"  stop-color="#b8d4f0" stop-opacity="0.88"/>
+              <stop offset="100%" stop-color="#90b8d8" stop-opacity="0.80"/>
+            </linearGradient>
 
-    <div class="counter" id="bellCounter">Bell rung: 0 times</div>
+            <!-- Inner glass tint (slightly blue-green like real glass) -->
+            <linearGradient id="gInner" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   stop-color="#a8d4c0" stop-opacity="0.10"/>
+              <stop offset="100%" stop-color="#90b4d0" stop-opacity="0.08"/>
+            </linearGradient>
 
-</div>
+            <!-- Glass base thickness -->
+            <linearGradient id="gBase" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%"   stop-color="#c4ddf0" stop-opacity="0.80"/>
+              <stop offset="100%" stop-color="#90b4cc" stop-opacity="0.95"/>
+            </linearGradient>
 
-<!-- Stats Section -->
-<div class="stats">
+            <!-- Neck glass -->
+            <linearGradient id="gNeck" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   stop-color="#b8d0e8" stop-opacity="0.85"/>
+              <stop offset="22%"  stop-color="#e0f0ff" stop-opacity="0.92"/>
+              <stop offset="50%"  stop-color="#f0f8ff" stop-opacity="0.40"/>
+              <stop offset="78%"  stop-color="#d4e8f8" stop-opacity="0.80"/>
+              <stop offset="100%" stop-color="#a0c0dc" stop-opacity="0.78"/>
+            </linearGradient>
 
-    <div class="stat-box">
-        <div class="stat-number" data-target="1.74">0</div>
-        Canadians owe <strong>$1.74</strong> for every $1 of disposable income.
+            <!-- ── LID gradients ── -->
+            <linearGradient id="gLidTop" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%"   stop-color="#E2E8F0"/>
+              <stop offset="35%"  stop-color="#F4F8FC"/>
+              <stop offset="70%"  stop-color="#CBD5E0"/>
+              <stop offset="100%" stop-color="#A0AEC0"/>
+            </linearGradient>
+            <linearGradient id="gLidSide" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%"   stop-color="#A0AEC0"/>
+              <stop offset="100%" stop-color="#718096"/>
+            </linearGradient>
+            <linearGradient id="gLidRim" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   stop-color="#4A5568"/>
+              <stop offset="30%"  stop-color="#718096"/>
+              <stop offset="60%"  stop-color="#CBD5E0"/>
+              <stop offset="100%" stop-color="#4A5568"/>
+            </linearGradient>
+
+            <!-- ── GOLD COIN gradients ── -->
+            <radialGradient id="gGoldFace" cx="38%" cy="36%" r="58%">
+              <stop offset="0%"   stop-color="#FFE066"/>
+              <stop offset="40%"  stop-color="#F5C200"/>
+              <stop offset="75%"  stop-color="#C98A00"/>
+              <stop offset="100%" stop-color="#8B5E00"/>
+            </radialGradient>
+            <linearGradient id="gGoldEdge" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%"   stop-color="#FFD700"/>
+              <stop offset="50%"  stop-color="#B8860B"/>
+              <stop offset="100%" stop-color="#8B6914"/>
+            </linearGradient>
+            <radialGradient id="gGoldShine" cx="30%" cy="25%" r="50%">
+              <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.70"/>
+              <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+            </radialGradient>
+
+            <!-- ── SILVER COIN gradients ── -->
+            <radialGradient id="gSilverFace" cx="38%" cy="36%" r="58%">
+              <stop offset="0%"   stop-color="#F8FAFC"/>
+              <stop offset="35%"  stop-color="#CBD5E0"/>
+              <stop offset="70%"  stop-color="#718096"/>
+              <stop offset="100%" stop-color="#2D3748"/>
+            </radialGradient>
+            <linearGradient id="gSilverEdge" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%"   stop-color="#E2E8F0"/>
+              <stop offset="50%"  stop-color="#718096"/>
+              <stop offset="100%" stop-color="#4A5568"/>
+            </linearGradient>
+            <radialGradient id="gSilverShine" cx="28%" cy="24%" r="48%">
+              <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.75"/>
+              <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+            </radialGradient>
+
+            <!-- ── PILE coin row gradients (flatter angle) ── -->
+            <!-- Gold pile top -->
+            <linearGradient id="gGPileTop" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%"   stop-color="#FFE566"/>
+              <stop offset="55%"  stop-color="#D4A800"/>
+              <stop offset="100%" stop-color="#A07800"/>
+            </linearGradient>
+            <!-- Silver pile top -->
+            <linearGradient id="gSPileTop" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%"   stop-color="#F0F4F8"/>
+              <stop offset="55%"  stop-color="#A0AEC0"/>
+              <stop offset="100%" stop-color="#4A5568"/>
+            </linearGradient>
+
+            <!-- ── CLIP PATHS ── -->
+            <!-- Jar interior (content clip) -->
+            <clipPath id="cJarInner">
+              <path d="M52,102 L52,248 Q52,262 68,262 L152,262 Q168,262 168,248 L168,102 Z"/>
+            </clipPath>
+            <!-- Falling coins clip: only above the jar opening -->
+            <clipPath id="cAbove">
+              <rect x="20" y="0" width="180" height="101"/>
+            </clipPath>
+            <!-- Full SVG clip for stray elements -->
+            <clipPath id="cFull">
+              <rect x="0" y="0" width="220" height="290"/>
+            </clipPath>
+
+            <!-- ── FILTERS ── -->
+            <filter id="fGlass" x="-5%" y="-5%" width="110%" height="110%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="1.5" result="blur"/>
+              <feOffset dx="1" dy="2" result="offsetBlur"/>
+              <feMerge>
+                <feMergeNode in="offsetBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+            <filter id="fCoinGlow">
+              <feGaussianBlur stdDeviation="1.2" result="g"/>
+              <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="fShadow" x="-10%" y="-5%" width="120%" height="120%">
+              <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="rgba(0,0,0,0.25)"/>
+            </filter>
+
+          </defs>
+
+          <!-- ════════════════════════════════
+               FALLING COINS (above jar)
+          ════════════════════════════════ -->
+          <g clip-path="url(#cAbove)">
+
+            <!-- GOLD coin 1 -->
+            <g class="coin-faller" style="animation-delay:0.2s">
+              <ellipse cx="110" cy="86" rx="19" ry="8.5" fill="url(#gGoldEdge)"/>
+              <ellipse cx="110" cy="83" rx="19" ry="8.5" fill="url(#gGoldFace)" filter="url(#fCoinGlow)"/>
+              <ellipse cx="110" cy="83" rx="14" ry="5.5" fill="url(#gGoldShine)" opacity="0.80"/>
+              <text x="110" y="86.5" text-anchor="middle" font-size="8" font-weight="900"
+                    fill="#7A4F00" font-family="Georgia,serif" opacity="0.85">$</text>
+            </g>
+
+            <!-- SILVER coin 2 -->
+            <g class="coin-faller" style="animation-delay:1.7s">
+              <ellipse cx="110" cy="86" rx="18" ry="8" fill="url(#gSilverEdge)"/>
+              <ellipse cx="110" cy="83" rx="18" ry="8" fill="url(#gSilverFace)" filter="url(#fCoinGlow)"/>
+              <ellipse cx="110" cy="83" rx="13" ry="5" fill="url(#gSilverShine)" opacity="0.75"/>
+              <text x="110" y="86.5" text-anchor="middle" font-size="7.5" font-weight="900"
+                    fill="#2D3748" font-family="Georgia,serif" opacity="0.80">25¢</text>
+            </g>
+
+            <!-- GOLD coin 3 -->
+            <g class="coin-faller" style="animation-delay:3.2s">
+              <ellipse cx="110" cy="86" rx="20" ry="9" fill="url(#gGoldEdge)"/>
+              <ellipse cx="110" cy="83" rx="20" ry="9" fill="url(#gGoldFace)" filter="url(#fCoinGlow)"/>
+              <ellipse cx="110" cy="83" rx="15" ry="6" fill="url(#gGoldShine)" opacity="0.78"/>
+              <text x="110" y="87" text-anchor="middle" font-size="9" font-weight="900"
+                    fill="#6B3E00" font-family="Georgia,serif" opacity="0.88">$</text>
+            </g>
+
+            <!-- SILVER coin 4 -->
+            <g class="coin-faller" style="animation-delay:4.7s">
+              <ellipse cx="110" cy="86" rx="17" ry="7.5" fill="url(#gSilverEdge)"/>
+              <ellipse cx="110" cy="83" rx="17" ry="7.5" fill="url(#gSilverFace)" filter="url(#fCoinGlow)"/>
+              <ellipse cx="110" cy="83" rx="12" ry="5" fill="url(#gSilverShine)" opacity="0.72"/>
+              <text x="110" y="86" text-anchor="middle" font-size="7" font-weight="900"
+                    fill="#1A202C" font-family="Georgia,serif" opacity="0.78">10¢</text>
+            </g>
+
+            <!-- GOLD coin 5 -->
+            <g class="coin-faller" style="animation-delay:6.2s">
+              <ellipse cx="110" cy="86" rx="19" ry="8.5" fill="url(#gGoldEdge)"/>
+              <ellipse cx="110" cy="83" rx="19" ry="8.5" fill="url(#gGoldFace)" filter="url(#fCoinGlow)"/>
+              <ellipse cx="110" cy="83" rx="14" ry="5.5" fill="url(#gGoldShine)" opacity="0.80"/>
+              <text x="110" y="86.5" text-anchor="middle" font-size="8" font-weight="900"
+                    fill="#7A4F00" font-family="Georgia,serif" opacity="0.85">$</text>
+            </g>
+
+            <!-- SILVER coin 6 -->
+            <g class="coin-faller" style="animation-delay:7.7s">
+              <ellipse cx="110" cy="86" rx="18" ry="8" fill="url(#gSilverEdge)"/>
+              <ellipse cx="110" cy="83" rx="18" ry="8" fill="url(#gSilverFace)" filter="url(#fCoinGlow)"/>
+              <ellipse cx="110" cy="83" rx="13" ry="5" fill="url(#gSilverShine)" opacity="0.74"/>
+              <text x="110" y="86.5" text-anchor="middle" font-size="7.5" font-weight="900"
+                    fill="#2D3748" font-family="Georgia,serif" opacity="0.80">25¢</text>
+            </g>
+
+            <!-- GOLD coin 7 -->
+            <g class="coin-faller" style="animation-delay:9.2s">
+              <ellipse cx="110" cy="86" rx="20" ry="9" fill="url(#gGoldEdge)"/>
+              <ellipse cx="110" cy="83" rx="20" ry="9" fill="url(#gGoldFace)" filter="url(#fCoinGlow)"/>
+              <ellipse cx="110" cy="83" rx="15" ry="6" fill="url(#gGoldShine)" opacity="0.80"/>
+              <text x="110" y="87" text-anchor="middle" font-size="9" font-weight="900"
+                    fill="#6B3E00" font-family="Georgia,serif" opacity="0.88">$</text>
+            </g>
+
+          </g><!-- /falling coins -->
+
+          <!-- ════════════════════════════════
+               JAR INTERIOR: coins + fill
+          ════════════════════════════════ -->
+          <g clip-path="url(#cJarInner)">
+
+            <!-- Stacked coin rows — 7 rows rising from bottom -->
+            <!-- Row 1 (bottom) — GOLD -->
+            <g class="pile-row" style="animation-delay:0.9s">
+              <ellipse cx="110" cy="257" rx="36" ry="8"   fill="#8B6200" opacity="0.65"/>
+              <ellipse cx="110" cy="254" rx="36" ry="8"   fill="url(#gGPileTop)"/>
+              <ellipse cx="110" cy="254" rx="28" ry="5"   fill="#FFE566" opacity="0.40"/>
+              <!-- coin ridge marks -->
+              <ellipse cx="110" cy="254" rx="34" ry="7.2" fill="none" stroke="#C89800" stroke-width="0.8" opacity="0.60"/>
+              <text x="110" y="257" text-anchor="middle" font-size="7" font-weight="900"
+                    fill="#5A3800" font-family="Georgia,serif" opacity="0.60">$ $ $</text>
+            </g>
+
+            <!-- Row 2 — SILVER -->
+            <g class="pile-row" style="animation-delay:2.4s">
+              <ellipse cx="110" cy="243" rx="34" ry="7.5" fill="#2D3748" opacity="0.55"/>
+              <ellipse cx="110" cy="240" rx="34" ry="7.5" fill="url(#gSPileTop)"/>
+              <ellipse cx="110" cy="240" rx="26" ry="4.8" fill="#FFFFFF"  opacity="0.35"/>
+              <ellipse cx="110" cy="240" rx="32" ry="6.8" fill="none" stroke="#718096" stroke-width="0.7" opacity="0.55"/>
+            </g>
+
+            <!-- Row 3 — GOLD -->
+            <g class="pile-row" style="animation-delay:3.9s">
+              <ellipse cx="110" cy="229" rx="33" ry="7.5" fill="#7A5200" opacity="0.60"/>
+              <ellipse cx="110" cy="226" rx="33" ry="7.5" fill="url(#gGPileTop)"/>
+              <ellipse cx="110" cy="226" rx="25" ry="4.8" fill="#FFE566" opacity="0.38"/>
+              <ellipse cx="110" cy="226" rx="31" ry="6.8" fill="none" stroke="#C89800" stroke-width="0.8" opacity="0.55"/>
+            </g>
+
+            <!-- Row 4 — SILVER -->
+            <g class="pile-row" style="animation-delay:5.4s">
+              <ellipse cx="110" cy="215" rx="32" ry="7" fill="#1A202C" opacity="0.50"/>
+              <ellipse cx="110" cy="212" rx="32" ry="7" fill="url(#gSPileTop)"/>
+              <ellipse cx="110" cy="212" rx="24" ry="4.5" fill="#FFFFFF" opacity="0.32"/>
+              <ellipse cx="110" cy="212" rx="30" ry="6.3" fill="none" stroke="#718096" stroke-width="0.7" opacity="0.50"/>
+            </g>
+
+            <!-- Row 5 — GOLD -->
+            <g class="pile-row" style="animation-delay:6.9s">
+              <ellipse cx="110" cy="201" rx="30" ry="7" fill="#7A5200" opacity="0.58"/>
+              <ellipse cx="110" cy="198" rx="30" ry="7" fill="url(#gGPileTop)"/>
+              <ellipse cx="110" cy="198" rx="22" ry="4.5" fill="#FFE566" opacity="0.36"/>
+              <ellipse cx="110" cy="198" rx="28" ry="6.2" fill="none" stroke="#C89800" stroke-width="0.8" opacity="0.52"/>
+            </g>
+
+            <!-- Row 6 — SILVER -->
+            <g class="pile-row" style="animation-delay:8.4s">
+              <ellipse cx="110" cy="187" rx="28" ry="6.5" fill="#1A202C" opacity="0.48"/>
+              <ellipse cx="110" cy="184" rx="28" ry="6.5" fill="url(#gSPileTop)"/>
+              <ellipse cx="110" cy="184" rx="20" ry="4.2" fill="#FFFFFF" opacity="0.30"/>
+              <ellipse cx="110" cy="184" rx="26" ry="5.8" fill="none" stroke="#718096" stroke-width="0.7" opacity="0.48"/>
+            </g>
+
+            <!-- Row 7 (top) — GOLD -->
+            <g class="pile-row" style="animation-delay:9.9s">
+              <ellipse cx="110" cy="173" rx="26" ry="6" fill="#7A5200" opacity="0.55"/>
+              <ellipse cx="110" cy="170" rx="26" ry="6" fill="url(#gGPileTop)"/>
+              <ellipse cx="110" cy="170" rx="18" ry="3.8" fill="#FFE566" opacity="0.35"/>
+              <ellipse cx="110" cy="170" rx="24" ry="5.4" fill="none" stroke="#C89800" stroke-width="0.7" opacity="0.50"/>
+            </g>
+
+          </g><!-- /jar interior -->
+
+          <!-- ════════════════════════════════
+               GLASS JAR BODY (drawn ON TOP of coins)
+          ════════════════════════════════ -->
+
+          <!-- Jar shadow on ground -->
+          <ellipse cx="110" cy="274" rx="65" ry="10" fill="#000" opacity="0.14"/>
+
+          <!-- Thick glass BASE (bottom dome) -->
+          <path d="M52,248 Q52,270 68,268 L152,268 Q168,270 168,248 Z"
+                fill="url(#gBase)" opacity="0.90" filter="url(#fGlass)"/>
+          <!-- Base inner curve (real glass has thick bottom) -->
+          <path d="M60,252 Q60,264 72,263 L148,263 Q160,264 160,252 Z"
+                fill="#c0d8ec" opacity="0.55"/>
+
+          <!-- Jar BACK wall (slight darkening for depth) -->
+          <path d="M54,102 L54,250 Q54,260 68,260 L152,260 Q166,260 166,250 L166,102 Z"
+                fill="#8aaec8" opacity="0.10"/>
+
+          <!-- Jar OUTER glass walls -->
+          <path d="M52,102 L52,250 Q52,264 68,264 L152,264 Q168,264 168,250 L168,102 Z"
+                fill="url(#gWallL)" stroke="#94bcd4" stroke-width="1.0"
+                filter="url(#fGlass)" opacity="0.92"/>
+
+          <!-- Left thick glass edge — bright caustic -->
+          <path d="M53,104 L53,249 Q53,261 64,261"
+                fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"
+                opacity="0.70" class="glass-shine"/>
+          <path d="M56,104 L56,249 Q56,259 66,259"
+                fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"
+                opacity="0.35"/>
+
+          <!-- Right thick glass edge — shadow -->
+          <path d="M167,104 L167,249 Q167,261 156,261"
+                fill="none" stroke="#5880a0" stroke-width="4" stroke-linecap="round"
+                opacity="0.45"/>
+          <path d="M164,104 L164,249 Q164,259 154,259"
+                fill="none" stroke="#4a7090" stroke-width="1.5" stroke-linecap="round"
+                opacity="0.28"/>
+
+          <!-- Center vertical glass shine stripe -->
+          <rect x="80" y="106" width="10" height="148" rx="5"
+                fill="#FFFFFF" opacity="0.22" class="glass-shine"/>
+          <rect x="82" y="106" width="4" height="148" rx="2"
+                fill="#FFFFFF" opacity="0.30" class="glass-shine"/>
+
+          <!-- Subtle inner glass tint (green tinge of real glass) -->
+          <path d="M58,104 L58,250 Q58,260 70,260 L150,260 Q162,260 162,250 L162,104 Z"
+                fill="url(#gInner)"/>
+
+          <!-- Horizontal refraction band (real jars get this midway) -->
+          <rect x="53" y="168" width="114" height="4" rx="2"
+                fill="#FFFFFF" opacity="0.12"/>
+
+          <!-- ── JAR NECK / SHOULDER ── -->
+          <!-- Shoulder taper (jar widens from neck to body) -->
+          <path d="M64,82 L52,108 L168,108 L156,82 Z"
+                fill="url(#gNeck)" stroke="#90b8d4" stroke-width="0.8" opacity="0.88"/>
+          <!-- Shoulder left highlight -->
+          <path d="M65,84 L54,107" fill="none" stroke="#FFFFFF"
+                stroke-width="3" stroke-linecap="round" opacity="0.55" class="glass-shine"/>
+          <!-- Shoulder right shadow -->
+          <path d="M155,84 L166,107" fill="none" stroke="#6090b0"
+                stroke-width="2" stroke-linecap="round" opacity="0.35"/>
+          <!-- Neck rectangle -->
+          <rect x="64" y="68" width="92" height="16"
+                fill="url(#gNeck)" stroke="#90b8d4" stroke-width="0.8" opacity="0.90"/>
+          <!-- Neck thread ridges -->
+          <rect x="65" y="70" width="90" height="2"  rx="1" fill="#FFFFFF" opacity="0.28"/>
+          <rect x="65" y="74" width="90" height="1.5" rx="0.8" fill="#FFFFFF" opacity="0.22"/>
+          <rect x="65" y="78" width="90" height="1.5" rx="0.8" fill="#FFFFFF" opacity="0.16"/>
+          <rect x="65" y="82" width="90" height="1.5" rx="0.8" fill="#FFFFFF" opacity="0.12"/>
+          <!-- Neck left edge highlight -->
+          <rect x="65" y="69" width="5" height="14" rx="2.5"
+                fill="#FFFFFF" opacity="0.48" class="glass-shine"/>
+
+          <!-- ════════════════════════════════
+               METAL LID (silver screw-top)
+          ════════════════════════════════ -->
+
+          <!-- Lid skirt / side band (hangs below top face) -->
+          <rect x="60" y="60" width="100" height="14" rx="4"
+                fill="url(#gLidSide)" stroke="#4A5568" stroke-width="0.6"/>
+          <!-- Lid skirt knurl ridges -->
+          <line x1="72"  y1="60" x2="72"  y2="74" stroke="#CBD5E0" stroke-width="0.9" opacity="0.55"/>
+          <line x1="82"  y1="60" x2="82"  y2="74" stroke="#CBD5E0" stroke-width="0.9" opacity="0.55"/>
+          <line x1="92"  y1="60" x2="92"  y2="74" stroke="#CBD5E0" stroke-width="0.9" opacity="0.55"/>
+          <line x1="102" y1="60" x2="102" y2="74" stroke="#CBD5E0" stroke-width="0.9" opacity="0.55"/>
+          <line x1="112" y1="60" x2="112" y2="74" stroke="#CBD5E0" stroke-width="0.9" opacity="0.55"/>
+          <line x1="122" y1="60" x2="122" y2="74" stroke="#CBD5E0" stroke-width="0.9" opacity="0.55"/>
+          <line x1="132" y1="60" x2="132" y2="74" stroke="#CBD5E0" stroke-width="0.9" opacity="0.55"/>
+          <line x1="142" y1="60" x2="142" y2="74" stroke="#CBD5E0" stroke-width="0.9" opacity="0.55"/>
+          <!-- Lid top face disk -->
+          <ellipse cx="110" cy="60" rx="52" ry="8"
+                   fill="url(#gLidTop)" stroke="#718096" stroke-width="0.8"/>
+          <!-- Lid top concentric rings (stamped metal detail) -->
+          <ellipse cx="110" cy="60" rx="46" ry="6.5" fill="none" stroke="#A0AEC0" stroke-width="0.6" opacity="0.70"/>
+          <ellipse cx="110" cy="60" rx="36" ry="5"   fill="none" stroke="#A0AEC0" stroke-width="0.5" opacity="0.55"/>
+          <ellipse cx="110" cy="60" rx="22" ry="3"   fill="none" stroke="#A0AEC0" stroke-width="0.5" opacity="0.45"/>
+          <!-- Lid top highlight arc -->
+          <path d="M74,55 Q110,51 146,55" fill="none" stroke="#FFFFFF"
+                stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+          <!-- Coin slot -->
+          <rect x="96" y="56.5" width="28" height="4" rx="2"
+                fill="#2D3748"/>
+          <rect x="97" y="56.5" width="26" height="1.5" rx="1"
+                fill="#FFFFFF" opacity="0.22"/>
+          <!-- Lid rim ring -->
+          <ellipse cx="110" cy="74" rx="50" ry="5"
+                   fill="url(#gLidRim)" opacity="0.80"/>
+
+        </svg>
+      </div>
+      <!-- end jar -->
+
+      <!-- Brand — Urbanist Black 900 -->
+      <h1 class="brand-name">Fintitude</h1>
+
+      <!-- Tagline — Inter -->
+      <p class="hero-tagline">
+        <strong>Financial clarity, finally.</strong><br>
+        Built for Canadians ready to break free from debt and build real wealth.
+      </p>
+
+      <!-- CTA -->
+      <div class="cta-wrap">
+        <button class="cta-btn" id="cta-btn" aria-label="Express interest in Fintitude">
+          <span class="bell-icon" aria-hidden="true">🔔</span>
+          I'm Excited &amp; I Want It
+        </button>
+        <p class="bell-counter" aria-live="polite">
+          <span id="bell-count">0</span> people rang the bell
+        </p>
+      </div>
     </div>
 
-    <div class="stat-box">
-        <div class="stat-number" data-target="25">0</div>
-        <strong>1 in 4</strong> adults cannot cover a $400 emergency.
+    <!-- Scroll hint -->
+    <div class="scroll-hint" aria-hidden="true">
+      <span>Scroll</span>
+      <svg width="16" height="22" viewBox="0 0 16 22" fill="none"
+           stroke="rgba(255,255,255,0.70)" stroke-width="1.6" stroke-linecap="round">
+        <rect x="1" y="1" width="14" height="14" rx="7"/>
+        <line x1="8" y1="5" x2="8" y2="9"/>
+        <polyline points="5,17 8,21 11,17"/>
+      </svg>
     </div>
+  </section>
 
-    <div class="stat-box">
-        <div class="stat-number" data-target="40">0</div>
-        <strong>40%</strong> feel anxious about managing money.
+  <!-- ══════════════════════════════════════════════════
+       STATS
+  ══════════════════════════════════════════════════ -->
+  <section class="stats-section" aria-labelledby="stats-heading">
+    <p class="section-label">The Reality Check</p>
+    <h2 class="section-heading" id="stats-heading">
+      Canadians are struggling.<br>We're here to change that.
+    </h2>
+
+    <div class="stats-grid">
+
+      <article class="stat-card">
+        <div class="stat-icon" aria-hidden="true">💳</div>
+        <div class="stat-number">
+          <span class="unit">$</span><span class="count-val" data-target="1.74" data-dec="2" data-suffix="">0.00</span>
+        </div>
+        <p class="stat-label">Canadians owe <strong>$1.74</strong> for every $1 of disposable income — among the highest ratios in the developed world.</p>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-icon" aria-hidden="true">🚨</div>
+        <div class="stat-number">
+          <span class="count-val" data-target="1" data-dec="0" data-suffix="">0</span><span class="unit"> in 4</span>
+        </div>
+        <p class="stat-label"><strong>1 in 4</strong> Canadian adults cannot cover a $400 emergency without borrowing or selling something.</p>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-icon" aria-hidden="true">😰</div>
+        <div class="stat-number">
+          <span class="count-val" data-target="40" data-dec="0" data-suffix="">0</span><span class="unit">%</span>
+        </div>
+        <p class="stat-label"><strong>40% of Canadians</strong> feel anxious about managing money — but few have access to clear, judgment-free guidance.</p>
+      </article>
+
     </div>
+  </section>
 
-    <h3 style="text-align:center; margin-top:40px;">We’re Here to Make a Difference</h3>
+  <!-- ══════════════════════════════════════════════════
+       CLOSING
+  ══════════════════════════════════════════════════ -->
+  <section class="closing-section" aria-labelledby="closing-heading">
+    <div class="closing-content">
+      <p class="closing-eyebrow">Our Promise</p>
+      <h2 class="closing-headline" id="closing-heading">
+        We're Here to Make<br>a Difference
+      </h2>
+      <p class="closing-sub">
+        Change your attitude towards your finances.<br>
+        Stay tuned for Fintitude.
+      </p>
+      <div class="powered-by">Powered by Libereon Financial Inc.</div>
+    </div>
+  </section>
 
-    <p style="text-align:center; font-size:24px; margin-top:10px;">
-        Change your <strong>attitude</strong> towards your finances.<br>
-        Stay tuned for <strong>Fintitude</strong>.
+  <!-- ══════════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════════ -->
+  <footer>
+    <p class="footer-text">
+      © 2026 <span>Fintitude</span> — Financial Education for Everyone
     </p>
+  </footer>
 
-    <p style="text-align:center; font-size:18px; opacity:0.8; margin-top:20px;">
-        Powered by <strong>Libereon Financial Inc.</strong>
-    </p>
+  <!-- ══════════════════════════════════════════════════
+       SCRIPTS
+  ══════════════════════════════════════════════════ -->
+  <script>
+  /* ── 1. GRADIENT CANVAS ─────────────────────────────────────── */
+  (function () {
+    const canvas = document.getElementById('gradient-canvas');
+    const ctx    = canvas.getContext('2d');
+    let W, H, t  = 0;
 
-</div>
+    const orbs = [
+      { x:0.12, y:0.25, r:0.55, h:150, s:80, l:22, sp:0.00036 },  // green
+      { x:0.85, y:0.18, r:0.50, h:225, s:80, l:22, sp:0.00050 },  // blue
+      { x:0.50, y:0.78, r:0.54, h:200, s:70, l:18, sp:0.00028 },  // blue-green
+      { x:0.28, y:0.60, r:0.42, h:155, s:70, l:18, sp:0.00042 },  // green
+      { x:0.78, y:0.68, r:0.46, h:230, s:60, l:16, sp:0.00032 },  // royal blue
+    ];
 
-<div class="footer">
-    © 2026 Fintitude — Financial Education for Everyone
-</div>
-
-<script>
-    /* Bell Counter */
-    let count = 0;
-    function ringBell() {
-        count++;
-        document.getElementById("bellCounter").innerText = "Bell rung: " + count + " times";
+    function resize() {
+      W = canvas.width  = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
     }
 
-    /* Animated Stats */
-    const statBoxes = document.querySelectorAll('.stat-box');
-    const statNumbers = document.querySelectorAll('.stat-number');
+    function draw() {
+      t++;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#04082E';
+      ctx.fillRect(0, 0, W, H);
 
-    function animateStats() {
-        statBoxes.forEach((box, index) => {
-            const rect = box.getBoundingClientRect();
-            if (rect.top < window.innerHeight - 50) {
-                box.classList.add('visible');
-                const target = statNumbers[index].getAttribute('data-target');
-                let current = 0;
-                const increment = target / 100;
+      orbs.forEach((o, i) => {
+        const ox = o.x + Math.sin(t * o.sp * 1000 + i * 1.8) * 0.15;
+        const oy = o.y + Math.cos(t * o.sp * 1000 + i * 2.4) * 0.11;
+        const px = ox * W, py = oy * H, pr = o.r * Math.max(W, H);
+        const a  = 0.28 + 0.07 * Math.sin(t * o.sp * 1500 + i);
 
-                const counter = setInterval(() => {
-                    current += increment;
-                    if (current >= target) {
-                        current = target;
-                        clearInterval(counter);
-                    }
-                    statNumbers[index].innerText = current.toFixed(0);
-                }, 20);
-            }
+        const g = ctx.createRadialGradient(px, py, 0, px, py, pr);
+        g.addColorStop(0,    `hsla(${o.h},${o.s}%,${o.l}%,${a})`);
+        g.addColorStop(0.45, `hsla(${o.h},${o.s-10}%,${o.l-5}%,${a*0.38})`);
+        g.addColorStop(1,    `hsla(${o.h},${o.s}%,${o.l}%,0)`);
+
+        ctx.beginPath();
+        ctx.arc(px, py, pr, 0, Math.PI * 2);
+        ctx.fillStyle = g;
+        ctx.fill();
+      });
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    draw();
+  })();
+
+  /* ── 2. SVG WAVES ───────────────────────────────────────────── */
+  (function () {
+    const w1 = document.querySelector('.wave.w1');
+    const w2 = document.querySelector('.wave.w2');
+    let t = 0;
+
+    function tick() {
+      t += 0.007;
+      const s = Math.sin(t), c = Math.cos(t * 0.85), s2 = Math.sin(t * 0.7 + 1.2);
+      w1.setAttribute('d',
+        `M0,${500+s*28} C240,${420+c*38} 480,${600+s2*32} 720,${500+s*26} C960,${400+c*30} 1200,${580+s2*28} 1440,${500+s*24} L1440,900 L0,900 Z`);
+      w2.setAttribute('d',
+        `M0,${640+c*18} C320,${560+s*26} 640,${710+s2*22} 960,${620+c*24} C1200,${550+s*20} 1380,${670+s2*18} 1440,${640+c*16} L1440,900 L0,900 Z`);
+      requestAnimationFrame(tick);
+    }
+    tick();
+  })();
+
+  /* ── 3. BELL COUNTER ─────────────────────────────────────────── */
+  (function () {
+    const btn   = document.getElementById('cta-btn');
+    const count = document.getElementById('bell-count');
+    let rings   = Math.floor(Math.random() * 380) + 140;
+    count.textContent = rings.toLocaleString();
+
+    btn.addEventListener('click', () => {
+      rings++;
+      count.textContent = rings.toLocaleString();
+      count.classList.remove('bump');
+      void count.offsetWidth;
+      count.classList.add('bump');
+      if (navigator.vibrate) navigator.vibrate(12);
+    });
+  })();
+
+  /* ── 4. SCROLL ANIMATIONS + COUNT-UP ────────────────────────── */
+  (function () {
+    function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+    function countUp(el, target, dec, suffix, duration) {
+      const start = performance.now();
+      function step(now) {
+        const p   = Math.min((now - start) / duration, 1);
+        const val = easeOut(p) * target;
+        el.textContent = val.toFixed(dec) + suffix;
+        if (p < 1) requestAnimationFrame(step);
+        else el.textContent = target.toFixed(dec) + suffix;
+      }
+      requestAnimationFrame(step);
+    }
+
+    const cards = document.querySelectorAll('.stat-card');
+    const durations = [1500, 1200, 1700];
+
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const card = entry.target;
+        card.classList.add('visible');
+        const valEl = card.querySelector('.count-val');
+        if (valEl) {
+          countUp(
+            valEl,
+            parseFloat(valEl.dataset.target),
+            parseInt(valEl.dataset.dec),
+            valEl.dataset.suffix || '',
+            durations[Array.from(cards).indexOf(card)]
+          );
+        }
+        obs.unobserve(card);
+      });
+    }, { threshold: 0.25 });
+
+    cards.forEach(c => obs.observe(c));
+
+    // Closing section
+    const closing = document.querySelector('.closing-section');
+    const closingObs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        closing.classList.add('visible');
+        closingObs.disconnect();
+      }
+    }, { threshold: 0.22 });
+    closingObs.observe(closing);
+  })();
+
+  /* ── 5. HERO PARALLAX ───────────────────────────────────────── */
+  (function () {
+    const content = document.querySelector('.hero-content');
+    let ticking   = false;
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          content.style.transform = `translateY(${window.scrollY * 0.26}px)`;
+          ticking = false;
         });
-    }
-
-    window.addEventListener('scroll', animateStats);
-</script>
-
+        ticking = true;
+      }
+    }, { passive: true });
+  })();
+  </script>
 </body>
 </html>
